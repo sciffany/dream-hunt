@@ -42,10 +42,10 @@
         <p>{% blocktranslate %}Each answer is a string of letters A&ndash;Z. Lowercase letters will be changed into uppercase, and any other characters will be stripped before checking for correctness.{% endblocktranslate %}</p>
         <p>{% blocktranslate with max_guesses=max_guesses_per_puzzle %}You have <strong>{{ max_guesses }} total guesses</strong> for each puzzle. If you legitimately run out of guesses and need more, feel free to contact us, though we won&rsquo;t grant your request if we see that you were, for example, guessing random thematic answers, or brute-forcing all 10-letter words.{% endblocktranslate %}</p>
     </div>
-    <div class="no-break">
+    <!-- <div class="no-break">
         <h4 id="Format">{% translate "How will hints work?" %}</h4>
         {% format_time hint_time "WEEKDATE_AT_TIME" as hint_start %}
-        <p>{% blocktranslate %}Starting on <strong>{{hint_start}}</strong>, teams will receive one hint every <strong>FIXME</strong> until the end of the hunt.{% endblocktranslate %}</p>
+        <p>{% blocktranslate %}Starting on <strong>{{hint_start}}</strong>, teams will receive one hint every <strong>day</strong> until the end of the hunt.{% endblocktranslate %}</p>
         {% if intro_hints %}
         <p>{% blocktranslate count hints=intro_hints %}The first <strong>{{ hints }} hint</strong> your team receives may only be used on the first set of puzzles in the hunt.{% plural %}The first <strong>{{ hints }} hints</strong> your team receives may only be used on the first set of puzzles in the hunt.{% endblocktranslate %}</p>
         {% endif %}
@@ -53,7 +53,7 @@
         {% if one_hint_at_a_time %}
         <p>{% blocktranslate %}You can request only one hint at a time.{% endblocktranslate %}</p>
         {% endif %}
-    </div>
+    </div> -->
 </main>
 
 {% endblock %}

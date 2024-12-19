@@ -5,15 +5,15 @@ from django.utils import timezone
 
 # included in various templates. NOTE, sometimes appears with a "the" before
 # it, maybe check those are what you want.
-HUNT_TITLE = 'FIXME Puzzle Hunt'
+HUNT_TITLE = 'Dream of the Drop Hunt'
 # included in various templates and displayed on the static site
 HUNT_ORGANIZERS = 'FIXME Puzzlesetters'
 # included in various templates and set as reply-to for automatic emails
-CONTACT_EMAIL = 'FIXME@example.com'
+CONTACT_EMAIL = 'sciffany@gmail.com'
 # the sender from which automatic emails are sent; your mail sending service
 # might require you set this to something (check settings/base.py to put your
 # actual mail sending service credentials)
-MESSAGING_SENDER_EMAIL = 'no-reply@FIXME.example.com'
+MESSAGING_SENDER_EMAIL = 'no-reply@dreamofthedrop.com'
 
 # Change this to True to reveal the story page to everyone.
 STORY_PAGE_VISIBLE = False
