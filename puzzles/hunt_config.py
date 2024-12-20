@@ -26,9 +26,28 @@ INITIAL_STATS_AVAILABLE = False
 # Survey results are only available to superusers.
 SURVEYS_AVAILABLE = False
 
-HUNT_START_TIME = settings.HUNT_START_TIME
-HUNT_END_TIME = settings.HUNT_END_TIME
-HUNT_CLOSE_TIME = settings.HUNT_CLOSE_TIME
+HUNT_START_TIME = timezone.make_aware(datetime.datetime(
+    year=2000,
+    month=1,
+    day=1,
+    hour=0,
+    minute=0,
+))
+
+HUNT_END_TIME = timezone.make_aware(datetime.datetime(
+    year=9000,
+    month=1,
+    day=1,
+    hour=0,
+    minute=0,
+))
+HUNT_CLOSE_TIME = timezone.make_aware(datetime.datetime(
+    year=9000,
+    month=1,
+    day=1,
+    hour=0,
+    minute=0,
+))
 
 MAX_GUESSES_PER_PUZZLE = 20
 MAX_MEMBERS_PER_TEAM = 6
