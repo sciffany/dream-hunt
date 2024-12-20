@@ -129,7 +129,6 @@ DATABASES = {
         'USER': 'udbcms721hkkl9',
         'PASSWORD': PASSWORD,
         'HOST': 'c724r43q8jp5nk.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com',
-        'PORT': '5432',
     }
 }
 
