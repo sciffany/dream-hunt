@@ -18,6 +18,26 @@ HUNT_START_TIME = timezone.make_aware(datetime.datetime(
     minute=0,
 ))
 
+
+HUNT_END_TIME = timezone.make_aware(datetime.datetime(
+    year=9000,
+    month=1,
+    day=1,
+    hour=0,
+    minute=0,
+))
+
+
+HUNT_CLOSE_TIME = timezone.make_aware(datetime.datetime(
+    year=9000,
+    month=1,
+    day=1,
+    hour=0,
+    minute=0,
+))
+
+
+
 STATIC_ROOT = 'static'
 
 CACHES = {
