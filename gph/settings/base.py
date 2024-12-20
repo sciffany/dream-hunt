@@ -53,6 +53,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.contrib.contenttypes.middleware.ContentTypeMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
