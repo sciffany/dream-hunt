@@ -222,7 +222,6 @@ LOGGING = {
         'puzzles': {
             'format': '%(asctime)s (PID %(process)d) [%(levelname)s] %(name)s %(message)s'
         },
-    },
     # FIXME you may want to change the filenames to something like
     # /srv/logs/django.log or similar
     handlers': {
