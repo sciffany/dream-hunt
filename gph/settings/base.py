@@ -121,7 +121,7 @@ ASGI_APPLICATION = 'gph.asgi.application'
 # https://stackoverflow.com/questions/48644208/django-postgresql-heroku-operational-error-fatal-too-many-connections-for-r
 DATABASES = {
      'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('DATABASE_URL'),
     }
 }
