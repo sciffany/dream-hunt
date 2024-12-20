@@ -10,9 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 '''
 
-import os
-import datetime
-from django.utils import timezone
+import os, sys
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -26,9 +25,26 @@ os.makedirs(LOGS_DIR, exist_ok=True)
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'FIXME_SECRET_KEY_HERE')
 
+# S3 Bucketeer
+# AWS_ACCESS_KEY_ID = os.environ.get('BUCKETEER_AWS_ACCESS_KEY_ID','')
+# AWS_SECRET_ACCESS_KEY = os.environ.get('BUCKETEER_AWS_SECRET_ACCESS_KEY', '')
+# AWS_STORAGE_BUCKET_NAME = os.environ.get('BUCKETEER_BUCKET_NAME','')
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+# AWS_LOCATION = 'public/static'
+
+# Admin (running team) Discord integration
+# ALERT_WEBHOOK_URL = os.environ.get('ALERT_WEBHOOK_URL','')
+# SUBMISSION_WEBHOOK_URL = os.environ.get('SUBMISSION_WEBHOOK_URL','')
+# FREE_ANSWER_WEBHOOK_URL = os.environ.get('FREE_ANSWER_WEBHOOK_URL','')
+# VICTORY_WEBHOOK_URL = os.environ.get('VICTORY_WEBHOOK_URL','')
+# FAILURE_WEBHOOK_URL = os.environ.get('FAILURE_WEBHOOK_URL','')
+# DISCORD_BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN','')
+
 RECAPTCHA_SITEKEY = None
 RECAPTCHA_SECRETKEY = None
-RECAPTCHA_SCORE_THRESHOLD = 0
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -38,7 +54,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.contenttypes.models.ContentType'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,7 +61,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    'corsheaders',
     'impersonate',
     'mathfilters',
     'channels',
@@ -54,10 +68,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.contrib.contenttypes.middleware.ContentTypeMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
@@ -72,21 +84,34 @@ MIDDLEWARE = [
     'puzzles.views.accept_ranges_middleware',
 ]
 
+redis_url = os.environ.get('REDIS_URL')
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": redis_url,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            'CONNECTION_POOL_KWARGS': {
+                'ssl_cert_reqs': None
+            },
         },
     }
+}
+
+ssl_context = ssl.SSLContext()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
+heroku_redis_ssl_host = {
+    'address':redis_url,
+    'ssl': ssl_context
 }
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [{'address':('127.0.0.1', 6379), 'db': 2}],
+            "hosts": (heroku_redis_ssl_host,)
         },
     }
 }
@@ -119,11 +144,10 @@ ASGI_APPLICATION = 'gph.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+# Apparently conn_max_age=0 is better for Heroku:
+# https://stackoverflow.com/questions/48644208/django-postgresql-heroku-operational-error-fatal-too-many-connections-for-r
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': dj_database_url.config(conn_max_age=0, ssl_require=True),
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -201,31 +225,31 @@ LOGGING = {
     },
     # FIXME you may want to change the filenames to something like
     # /srv/logs/django.log or similar
-    'handlers': {
+    handlers': {
         'django': {
             'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(LOGS_DIR, 'django.log'),
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
             'formatter': 'django',
         },
         'general': {
             'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(LOGS_DIR, 'general.log'),
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
             'formatter': 'puzzles',
         },
         'puzzle': {
             'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(LOGS_DIR, 'puzzle.log'),
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
             'formatter': 'puzzles',
         },
         'request': {
             'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(LOGS_DIR, 'request.log'),
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
             'formatter': 'puzzles',
-        },
+        }
     },
     'loggers': {
         'django': {
@@ -256,28 +280,3 @@ GA_CODE = ''
 
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
-
-# Hunt config. These are defined here to make them easy to override
-# under different environments.
-
-HUNT_START_TIME = timezone.make_aware(datetime.datetime(
-    year=9001,
-    month=1,
-    day=1,
-    hour=0,
-    minute=0,
-), timezone=datetime.timezone(datetime.timedelta(hours=11)))
-HUNT_END_TIME = timezone.make_aware(datetime.datetime(
-    year=9002,
-    month=1,
-    day=1,
-    hour=0,
-    minute=0,
-), timezone=datetime.timezone(datetime.timedelta(hours=11)))
-HUNT_CLOSE_TIME = timezone.make_aware(datetime.datetime(
-    year=9003,
-    month=1,
-    day=1,
-    hour=0,
-    minute=0,
-), timezone=datetime.timezone(datetime.timedelta(hours=11)))
