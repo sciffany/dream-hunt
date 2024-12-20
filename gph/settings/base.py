@@ -121,16 +121,11 @@ ASGI_APPLICATION = 'gph.asgi.application'
 # Apparently conn_max_age=0 is better for Heroku:
 # https://stackoverflow.com/questions/48644208/django-postgresql-heroku-operational-error-fatal-too-many-connections-for-r
 
-PASSWORD = os.environ.get('DATABASE_URL').split(':')[2].split('@')[0]
 DATABASES = {
-     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd6l1rlgjijlsh7',
-        'USER': 'udbcms721hkkl9',
-        'PASSWORD': PASSWORD,
-        'HOST': 'c724r43q8jp5nk.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com',
-        'PORT': os.environ.get('PORT'),
-    }
+     'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=0,  # as per the comment about Heroku connections
+    )
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
