@@ -39,13 +39,12 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.contenttypes',
     'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django.contrib.humanize',
     'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     'impersonate',
     'mathfilters',
     'channels',
@@ -118,20 +117,24 @@ ASGI_APPLICATION = 'gph.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#
 
-PASSWORD = os.environ.get('DATABASE_URL').split(':')[2].split('@')[0]
+# PASSWORD = os.environ.get('DATABASE_URL').split(':')[2].split('@')[0]
 # Apparently conn_max_age=0 is better for Heroku:
 # https://stackoverflow.com/questions/48644208/django-postgresql-heroku-operational-error-fatal-too-many-connections-for-r
 
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd6l1rlgjijlsh7',
-        'USER': 'udbcms721hkkl9',
-        'PASSWORD': PASSWORD,
-        'HOST': 'c724r43q8jp5nk.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com',
-        'PORT': '5432',
-    }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'd6l1rlgjijlsh7',
+    #     'USER': 'udbcms721hkkl9',
+    #     'PASSWORD': PASSWORD,
+    #     'HOST': 'c724r43q8jp5nk.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com',
+    #     'PORT': '5432',
+    # }
 }
 
 
