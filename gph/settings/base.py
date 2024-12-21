@@ -38,7 +38,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'puzzles.__init__.PuzzlesConfig',
+    'puzzles',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'impersonate',
     'mathfilters',
     'channels',
-    'puzzles',
 ]
 SITE_ID = 1
 MIDDLEWARE = [
